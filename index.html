@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>⚡ AI Student OS - Ultimate Edition</title>
+    <style>
+        :root {
+            --glow-color: #00f2fe;
+            --bg-glass: rgba(18, 22, 35, 0.75);
+            --border-glass: rgba(255, 255, 255, 0.08);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: radial-gradient(circle at 50% 50%, #111827, #030712);
+            color: #f3f4f6;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%; left: -50%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(0, 242, 254, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(79, 70, 229, 0.2) 0%, transparent 45%);
+            animation: drift 25s infinite linear;
+            z-index: -1;
+        }
+        @keyframes drift {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #sidebar {
+            width: 280px;
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            border-right: 1px solid var(--border-glass);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .panel-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-glass);
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        #main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(10, 12, 18, 0.4);
+            backdrop-filter: blur(4px);
+        }
+
+        header {
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--border-glass);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1, h2, h3 { margin: 0; color: #fff; }
+        .glow-text { text-shadow: 0 0 10px var(--glow-color); }
+
+        #chat-history {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .msg {
+            max-width: 75%;
+            padding: 14px 18px;
+            border-radius: 16px;
+            line-height: 1.5;
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10deg); } to { opacity: 1; transform: translateY(0); } }
+
+        .user-msg {
+            background: linear-gradient(135deg, #4f46e5, #06b6d4);
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+        }
+
+        .ai-msg {
+            background: rgba(31, 41, 55, 0.7);
+            border: 1px solid var(--border-glass);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .msg-tools {
+            margin-top: 8px;
+            display: flex;
+            gap: 10px;
+        }
+        .tool-btn {
+            background: transparent;
+            border: none;
+            color: #9ca3af;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .tool-btn:hover { color: #fff; }
+
+        #input-area {
+            padding: 25px 30px;
+            display: flex;
+            gap: 15px;
+            background: rgba(15, 23, 42, 0.6);
+            border-top: 1px solid var(--border-glass);
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border-glass);
+            background: rgba(0,0,0,0.3);
+            color: #fff;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--glow-color);
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+        }
+
+        .action-btn {
+            padding: 0 24px;
+            background: linear-gradient(135deg, #00f2fe, #4facfe);
+            color: #030712;
+            font-weight: bold;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .action-btn:hover { transform: scale(1.03); }
+        .action-btn:disabled { background: #374151; color: #9ca3af; cursor: not-allowed; }
+
+        #timer-display { font-size: 28px; font-weight: bold; text-align: center; margin: 10px 0; color: #00f2fe; }
+        .flashcard {
+            background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+            border-left: 4px solid #3b82f6;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        #status-pill {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar">
+        <div>
+            <h2 class="glow-text">🤖 AI Student OS</h2>
+            <p style="font-size: 12px; color: #9ca3af; margin-top: 4px;">Exhibition Edition Pro</p>
+        </div>
+        
+        <div class="panel-card">
+            <div style="font-weight: bold; margin-bottom: 5px;">🤖 AI Engine Status</div>
+            <div id="status-pill">Warming Up System...</div>
+        </div>
+
+        <div class="panel-card">
+            <div style="font-weight: bold; display: flex; justify-content: space-between;">
+                <span>⏱️ Focus Space</span>
+                <span style="font-size: 11px; color: #a78bfa;">Interval</span>
+            </div>
+            <div id="timer-display">25:00</div>
+            <button class="action-btn" style="width:100%; padding: 8px; font-size:13px;" onclick="toggleTimer()" id="timer-btn">Start Session</button>
+        </div>
+
+        <div class="panel-card" style="flex: 1; overflow-y: auto;">
+            <div style="font-weight: bold; margin-bottom: 10px;">🗂️ Live Study Cards</div>
+            <div id="flashcards-box" style="color: #9ca3af; font-size: 12px;">
+                Ask the AI to generate flashcards to populate this interactive exam deck!
+            </div>
+        </div>
+    </div>
+
+    <div id="main-container">
+        <header>
+            <div>🚀 Next-Gen Browser Inference System</div>
+            <div style="font-size: 13px; color: #00f2fe; font-weight: bold;">🔒 100% Client-Side Privacy</div>
+        </header>
+
+        <div id="chat-history">
+            <div class="msg ai-msg">
+                Welcome, Boss! I am compiling my model vectors entirely inside your graphic architecture right now. 
+                Once the status bar shows ready, we can run flashcard generation, standard problem solving, and voice assistance.
+            </div>
+        </div>
+
+        <div id="input-area">
+            <input type="text" id="user-input" placeholder="Initialize system first..." disabled>
+            <button id="send-btn" class="action-btn" onclick="executeHubAction()" disabled>Send</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { pipeline } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.1';
+
+        let aiModel;
+        const pill = document.getElementById('status-pill');
+        const boxInput = document.getElementById('user-input');
+        const actionBtn = document.getElementById('send-btn');
+
+        async function launchSystem() {
+            try {
+                aiModel = await pipeline('text2text-generation', 'Xenova/LaMini-Flan-T5-78M');
+                pill.style.background = "rgba(16, 185, 129, 0.2)";
+                pill.style.color = "#10b981";
+                pill.innerText = "🟢 System Active (Local GPU/CPU)";
+                boxInput.disabled = false;
+                actionBtn.disabled = false;
+                boxInput.placeholder = "Ask a question, or type 'generate flashcards for history'...";
+            } catch (err) {
+                pill.innerText = "⚠️ Setup Allocation Error";
+                console.error(err);
+            }
+        }
+        launchSystem();
+
+        window.executeHubAction = async function() {
+            const promptValue = boxInput.value.trim();
+            if(!promptValue) return;
+
+            appendMsg(promptValue, 'user-msg');
+            boxInput.value = '';
+            
+            const typingIndicator = appendMsg('Generating core computation matrix...', 'ai-msg');
+
+            const responseData = await aiModel(promptValue, { max_new_tokens: 120 });
+            let cleanResponseText = responseData[0].generated_text;
+
+            if(promptValue.toLowerCase().includes('flashcard')) {
+                buildSmartCards(cleanResponseText);
+            }
+
+            typingIndicator.innerHTML = `
+                <div>${cleanResponseText}</div>
+                <div class="msg-tools">
+                    <button class="tool-btn" onclick="speakText(this)">🔊 Speak Out Loud</button>
+                </div>
+            `;
+        }
+
+        document.getElementById('user-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                executeHubAction();
+            }
+        });
+
+        function appendMsg(text, typeClass) {
+            const viewport = document.getElementById('chat-history');
+            const layer = document.createElement('div');
+            layer.className = `msg ${typeClass}`;
+            layer.innerText = text;
+            viewport.appendChild(layer);
+            viewport.scrollTop = viewport.scrollHeight;
+            return layer;
+        }
+
+        function buildSmartCards(text) {
+            const deck = document.getElementById('flashcards-box');
+            if(deck.innerText.includes('Ask the AI')) deck.innerHTML = '';
+            
+            const cardElement = document.createElement('div');
+            cardElement.className = 'flashcard';
+            cardElement.innerHTML = `<strong>💡 AI Study Note:</strong><br>${text.substring(0, 80)}...`;
+            deck.prepend(cardElement);
+        }
+
+        window.speakText = function(btn) {
+            const textContent = btn.parentElement.parentElement.firstElementChild.innerText;
+            const vocalTract = new SpeechSynthesisUtterance(textContent);
+            vocalTract.rate = 1.0;
+            window.speechSynthesis.speak(vocalTract);
+        }
+    </script>
+
+    <script>
+        let counter;
+        let running = false;
+        let secondsLeft = 25 * 60;
+
+        function toggleTimer() {
+            const button = document.getElementById('timer-btn');
+            if(running) {
+                clearInterval(counter);
+                button.innerText = "Resume Session";
+                running = false;
+            } else {
+                running = true;
+                button.innerText = "Pause Session";
+                counter = setInterval(() => {
+                    secondsLeft--;
+                    let min = Math.floor(secondsLeft / 60);
+                    let sec = secondsLeft % 60;
+                    document.getElementById('timer-display').innerText = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+                    if(secondsLeft <= 0) {
+                        clearInterval(counter);
+                        alert("Focus interval complete! Great job student.");
+                    }
+                }, 1000);
+            }
+        }
+    </script>
+</body>
+</html> 

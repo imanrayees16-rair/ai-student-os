@@ -20,16 +20,6 @@
             overflow: hidden;
         }
 
-        /* Sidebar Architecture */
-        #sidebar {
-            width: 300px;
-            background-color: #111827;
-            border-right: 1px solid #1f2937;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-        }
-
         .brand {
             font-size: 22px;
             font-weight: bold;
@@ -56,7 +46,7 @@
 
         .panel-title {
             font-size: 12px;
-            font-weight: uppercase;
+            text-transform: uppercase;
             color: #9ca3af;
             letter-spacing: 1px;
             margin-bottom: 10px;
@@ -76,7 +66,6 @@
             transition: all 0.3s ease;
         }
 
-        /* Core Workspace Chat Layout */
         #main-workspace {
             flex: 1;
             display: flex;
@@ -153,7 +142,6 @@
             color: #f1f5f9;
         }
 
-        /* Controls / Inputs */
         #input-area {
             padding: 20px 30px;
             border-top: 1px solid #1e293b;
@@ -204,7 +192,6 @@
             background: #059669;
         }
 
-        /* Smart Widgets */
         .timer-display {
             font-size: 28px;
             font-weight: bold;
@@ -225,7 +212,7 @@
 </head>
 <body>
 
-    <div id="#sidebar" style="width: 300px; background-color: #111827; border-right: 1px solid #1f2937; display: flex; flex-direction: column; padding: 20px;">
+    <div id="sidebar" style="width: 300px; background-color: #111827; border-right: 1px solid #1f2937; display: flex; flex-direction: column; padding: 20px;">
         <div class="brand">🤖 AI Student OS</div>
         <div class="edition-badge">Exhibition Edition Pro</div>
         
@@ -302,6 +289,8 @@
                     buildSmartCards(cleanResponseText);
                 } else if(promptValue.toLowerCase().includes('hello') || promptValue.toLowerCase().includes('hi')) {
                     cleanResponseText = "Hello Boss! The Client-Side Inference matrix is ready. Let me know what you are studying today or if you need a focus pomodoro timer!";
+                } else if(promptValue.toLowerCase().includes('how are you')) {
+                    cleanResponseText = "I am running optimally at peak performance! All local vector nodes are fully active and my simulation matrix latency is under 12 milliseconds. Thanks for checking in, Boss! What are we studying today?";
                 } else {
                     cleanResponseText = `Analysis complete for: "${promptValue}". Key themes parsed. Try typing 'generate flashcards' to see the deck update live!`;
                 }

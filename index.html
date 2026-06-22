@@ -260,7 +260,6 @@
         const boxInput = document.getElementById('user-input');
         const actionBtn = document.getElementById('send-btn');
 
-        // High-compatibility system trigger
         async function launchSystem() {
             pill.style.background = "rgba(16, 185, 129, 0.2)";
             pill.style.color = "#10b981";
@@ -273,23 +272,25 @@
         setTimeout(launchSystem, 1500);
 
         window.executeHubAction = async function() {
-            const promptValue = boxInput.value.trim();
+            let promptValue = boxInput.value.trim().toLowerCase();
             if(!promptValue) return;
 
-            appendMsg(promptValue, 'user-msg');
+            // Append original casing to screen
+            appendMsg(boxInput.value.trim(), 'user-msg');
             boxInput.value = '';
             
             const typingIndicator = appendMsg('Generating core computation matrix...', 'ai-msg');
 
             setTimeout(() => {
-                let cleanResponseText = "Analysis complete. System running offline matrix models. To ensure total offline functionality during school exhibitions, text modules can reference your saved study deck cards directly.";
+                let cleanResponseText = "";
                 
-                if(promptValue.toLowerCase().includes('flashcard') || promptValue.toLowerCase().includes('history')) {
+                // Clean phrase matching layout
+                if(promptValue.includes('flashcard') || promptValue.includes('history')) {
                     cleanResponseText = "Flashcard generated successfully: 'The French Revolution started in 1789, leading to the overthrow of the monarchy.' Added to your active study deck side-panel!";
                     buildSmartCards(cleanResponseText);
-                } else if(promptValue.toLowerCase().includes('hello') || promptValue.toLowerCase().includes('hi')) {
+                } else if(promptValue.includes('hello') || promptValue.includes('hi')) {
                     cleanResponseText = "Hello Boss! The Client-Side Inference matrix is ready. Let me know what you are studying today or if you need a focus pomodoro timer!";
-                } else if(promptValue.toLowerCase().includes('how are you')) {
+                } else if(promptValue.includes('how are you')) {
                     cleanResponseText = "I am running optimally at peak performance! All local vector nodes are fully active and my simulation matrix latency is under 12 milliseconds. Thanks for checking in, Boss! What are we studying today?";
                 } else {
                     cleanResponseText = `Analysis complete for: "${promptValue}". Key themes parsed. Try typing 'generate flashcards' to see the deck update live!`;

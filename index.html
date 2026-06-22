@@ -275,7 +275,6 @@
             let promptValue = boxInput.value.trim().toLowerCase();
             if(!promptValue) return;
 
-            // Append original casing to screen
             appendMsg(boxInput.value.trim(), 'user-msg');
             boxInput.value = '';
             
@@ -284,7 +283,6 @@
             setTimeout(() => {
                 let cleanResponseText = "";
                 
-                // Clean phrase matching layout
                 if(promptValue.includes('flashcard') || promptValue.includes('history')) {
                     cleanResponseText = "Flashcard generated successfully: 'The French Revolution started in 1789, leading to the overthrow of the monarchy.' Added to your active study deck side-panel!";
                     buildSmartCards(cleanResponseText);
